@@ -6,10 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.Objects;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Scanner;
 
 @SpringBootApplication
@@ -40,9 +39,8 @@ public class FamilyTreeApplication {
 	}
 
 	private static void populateInitialData() {
-		ClassLoader classLoader = FamilyTreeApplication.class.getClassLoader();
-		File csvFile = new File(Objects.requireNonNull(classLoader.getResource("initial-data.txt")).getFile());
-		try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+		final InputStream fileStream = FamilyTreeApplication.class.getResourceAsStream("/initial-data.txt");
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(fileStream))) {
 			String line;
 			while ((line = br.readLine()) != null) {
 				familyTreeService.processEntry(line);
